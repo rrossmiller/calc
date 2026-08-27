@@ -1,0 +1,41 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "rlang",
+      "camelcase": "rlang",
+      "title": "rlang",
+      "scope": "source.rlang",
+      "file-types": [
+        "rlang"
+      ],
+      "injection-regex": "^rlang$",
+      "class-name": "TreeSitterRlang"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Rlang grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "RKR",
+        "url": ""
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/tree-sitter/tree-sitter-rlang",
+      "funding": ""
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "java": false,
+    "node": false,
+    "python": false,
+    "rust": true,
+    "swift": false,
+    "zig": true
+  }
+}
