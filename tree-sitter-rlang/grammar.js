@@ -22,6 +22,7 @@ export default grammar({
       $.call_expression,
       $.binary_expression,
       $.parenthesized_expression,
+      $.assignment_expression,
     ),
 
     number: $ => /-?[0-9]+(\.[0-9]*)?/,
@@ -36,6 +37,13 @@ export default grammar({
         repeat(seq(',', field('argument', $._expression)))
       )),
       ')'
+    ),
+
+    assignment_expression: $ => seq(
+      "let",
+      field("identifier", $.identifier),
+      "=",
+      field("expression", $._expression),
     ),
 
     parenthesized_expression: $ => seq(

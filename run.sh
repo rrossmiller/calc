@@ -5,4 +5,5 @@ tree-sitter generate
 
 cd ../rlang-rust
 clear
-cargo run
+# cargo run -- -d
+cargo run 
