@@ -1,0 +1,41 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "calc",
+      "camelcase": "Calc",
+      "title": "Calc",
+      "scope": "source.calc",
+      "file-types": [
+        "calc"
+      ],
+      "injection-regex": "^calc$",
+      "class-name": "TreeSitterCalc"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Calc grammar for tree-sitter",
+    "authors": [
+      {
+        "name": "RKR",
+        "url": ""
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/tree-sitter/tree-sitter-calc",
+      "funding": ""
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "java": false,
+    "node": false,
+    "python": false,
+    "rust": true,
+    "swift": false,
+    "zig": false
+  }
+}

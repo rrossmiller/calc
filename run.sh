@@ -1,9 +1,9 @@
 #! env /bin/zsh
 
-cd ./tree-sitter-rlang
+cd ./tree-sitter-calc
 tree-sitter generate
 
-cd ../rlang-rust
+cd ../calc-rs
 clear
 # cargo run -- -d
 cargo run 
