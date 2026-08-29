@@ -12,7 +12,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut parser = Parser::new();
     let lang: tree_sitter::Language = tree_sitter_rlang::LANGUAGE.into();
 
-    parser.set_language(&lang).unwrap();
+    parser.set_language(&lang)?;
 
     let mut source = String::new();
     loop {
@@ -41,15 +41,17 @@ fn main() -> Result<(), Box<dyn Error>> {
         if root.has_error() {
             println!("Invalid input");
             continue;
-            // return Ok(());
         }
 
         let mut cursor = root.walk();
         for child in root.children(&mut cursor) {
             // println!("-> {}: {}", child.kind(), &source[child.byte_range()]);
             // println!("ans: {}", eval(child, source)?);
-
-            println!(" = {}\n", eval(child, source)?);
+            let res = eval(child, source);
+            match res {
+                Ok(r) => println!(" = {}\n", r),
+                Err(s) => println!("{}", s),
+            }
         }
     }
 
@@ -77,7 +79,7 @@ fn eval(node: tree_sitter::Node, source: &str) -> Result<f64, String> {
             }
         }
     }
-    return Err("Node not implemented.final return".to_string());
+    return Err("Node not implemented.".to_string());
 }
 
 fn eval_binary(node: tree_sitter::Node, source: &str) -> Result<f64, String> {
@@ -101,6 +103,9 @@ fn eval_binary(node: tree_sitter::Node, source: &str) -> Result<f64, String> {
                 return Ok(l * r);
             }
             Operator::DivideOperator => {
+                if r == 0.0 {
+                    return Err("Cannot divide by 0.".to_string());
+                }
                 return Ok(l / r);
             }
         }
@@ -136,10 +141,13 @@ fn eval_call(node: tree_sitter::Node, source: &str) -> Result<f64, String> {
     }
 }
 
-fn validate_arg_count(node: tree_sitter::Node, fname: &str, expected: usize) -> Result<usize, String> {
+fn validate_arg_count(
+    node: tree_sitter::Node,
+    fname: &str,
+    expected: usize,
+) -> Result<usize, String> {
     let mut cursor = node.walk();
-    let args = node.children_by_field_name("argument", &mut cursor);
-    let n_args = args.collect::<Vec<_>>().len();
+    let n_args = node.children_by_field_name("argument", &mut cursor).count();
 
     let arg = if expected > 1 { "args" } else { "arg" };
     if n_args != expected {

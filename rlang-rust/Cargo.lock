@@ -12,6 +12,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "calc"
+version = "0.1.0"
+dependencies = [
+ "tree-sitter",
+ "tree-sitter-rlang",
+]
+
+[[package]]
 name = "cc"
 version = "1.4.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -107,14 +115,6 @@ name = "regex-syntax"
 version = "0.8.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d6f6ff9a378485b298a5286656da665ba74413d36db0979633275d2e708145d4"
-
-[[package]]
-name = "rlang-rust"
-version = "0.1.0"
-dependencies = [
- "tree-sitter",
- "tree-sitter-rlang",
-]
 
 [[package]]
 name = "serde"
