@@ -21,7 +21,6 @@ struct Cli {
     #[arg(short, long)]
     debug: bool,
 }
-
 fn main() -> Result<(), Box<dyn Error>> {
     let cli = Cli::parse();
 

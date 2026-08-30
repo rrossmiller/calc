@@ -1,3 +1,9 @@
+use reqwest;
+use reqwest::blocking as req;
+use serde::Deserialize;
+use std;
+const URL: &str = "https://www.bankofcanada.ca/valet/observations/FXUSDCAD/json?recent=1";
+
 /// Formula
 /// (°F − 32) × 5/9 = °C
 pub fn ftoc(t: f64) -> f64 {
@@ -10,15 +16,44 @@ pub fn ctof(t: f64) -> f64 {
     return t * 9.0 / 5.0 + 32.0;
 }
 
-pub fn pow(x: f64, y: f64) -> f64 {
-    x.powf(y)
+#[derive(Deserialize, Debug)]
+struct Val {
+    v: String,
+}
+#[derive(Deserialize, Debug)]
+struct Observation {
+    FXUSDCAD: Val,
+}
+#[derive(Deserialize, Debug)]
+struct Response {
+    observations: Vec<Observation>,
 }
 
-// sqrt(...)
-// abs(...)
-// round(...)
-// floor(...)
-// ceil(...)
+fn get_forex() -> Result<f64, Box<dyn std::error::Error>> {
+    let client = req::Client::new();
+    let resp = client.get(URL).send()?;
+    if !resp.status().is_success() {
+        // use cached value
+        return Err(format!("forex api returned: {}", resp.status()).into());
+    }
+    let r: Response = resp.json()?;
+    let ex: f64 = r.observations[0].FXUSDCAD.v.parse::<_>().unwrap();
+    Ok(ex)
+}
+pub fn cad_usd(cad: f64) -> Result<f64, String> {
+    let ex = get_forex();
+    match ex {
+        Ok(x) => Ok(cad / x),
+        Err(e) => Err(e.to_string()),
+    }
+}
+pub fn usd_cad(usd: f64) -> Result<f64, String> {
+    let ex = get_forex();
+    match ex {
+        Ok(x) => Ok(usd * x),
+        Err(e) => Err(e.to_string()),
+    }
+}
 
 // THEORETICALLY CLEANER
 

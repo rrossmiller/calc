@@ -126,7 +126,31 @@ impl Interp {
 
                 let base = self.eval(children.next().unwrap())?; //.expect("unable to evaluate base argument");
                 let exp = self.eval(children.next().unwrap())?; //.expect("unable to evaluate exp argument");
-                Ok(calc_std::pow(base, exp))
+                Ok(base.powf(exp))
+            }
+            "sqrt" => {
+                self.validate_arg_count(node, "sqrt", 1)?;
+                let mut cursor = node.walk();
+                let mut children = node.children_by_field_name("argument", &mut cursor);
+
+                let arg = self.eval(children.next().unwrap())?; //.expect("unable to evaluate base argument");
+                Ok(arg.sqrt())
+            }
+            "abs" => {
+                self.validate_arg_count(node, "abs", 1)?;
+                let mut cursor = node.walk();
+                let mut children = node.children_by_field_name("argument", &mut cursor);
+
+                let arg = self.eval(children.next().unwrap())?; //.expect("unable to evaluate base argument");
+                Ok(arg.abs())
+            }
+            "round" => {
+                self.validate_arg_count(node, "round", 1)?;
+                let mut cursor = node.walk();
+                let mut children = node.children_by_field_name("argument", &mut cursor);
+
+                let arg = self.eval(children.next().unwrap())?; //.expect("unable to evaluate base argument");
+                Ok(arg.round())
             }
             "ftoc" => {
                 self.validate_arg_count(node, "ftoc", 1)?;
@@ -138,6 +162,16 @@ impl Interp {
                 self.validate_arg_count(node, "ctof", 1)?;
                 let arg = self.eval(node.child_by_field_name("argument").unwrap())?; // .expect("unable to evaluate an argument");
                 Ok(calc_std::ctof(arg))
+            }
+            "cad_usd" => {
+                self.validate_arg_count(node, "cad_usd", 1)?;
+                let arg = self.eval(node.child_by_field_name("argument").unwrap())?; // .expect("unable to evaluate an argument");
+                calc_std::cad_usd(arg)
+            }
+            "usd_cad" => {
+                self.validate_arg_count(node, "usd_cad", 1)?;
+                let arg = self.eval(node.child_by_field_name("argument").unwrap())?; // .expect("unable to evaluate an argument");
+                calc_std::usd_cad(arg)
             }
             _ => Err("function not found".to_string()),
         }
