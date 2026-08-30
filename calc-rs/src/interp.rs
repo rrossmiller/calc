@@ -17,13 +17,19 @@ impl Interp {
             source: String::new(),
         }
     }
-    pub fn set_source(self: &mut Interp, source: String) {
-        self.source = source;
-    }
-    pub fn run(self: &mut Interp, root: tree_sitter::Node, debug: bool) -> Result<(), String> {
+
+    pub fn run(
+        self: &mut Interp,
+        source: String,
+        root: tree_sitter::Node,
+        is_repl: bool,
+        debug: bool,
+    ) -> Result<(), String> {
         if root.has_error() {
-            println!("Invalid input");
+            return Err("Invalid input".to_string());
         }
+
+        self.source = source;
 
         let mut cursor = root.walk();
         for child in root.children(&mut cursor) {
@@ -34,7 +40,13 @@ impl Interp {
                         println!("-> {}: {}", child.kind(), &self.source[child.byte_range()]);
                         println!("ans: {}", r);
                     }
-                    println!(" = {}\n", r);
+                    let mut pref = "";
+                    let mut suf = "";
+                    if is_repl {
+                        pref = " = ";
+                        suf = "\n";
+                    }
+                    println!("{}{}{}", pref, r, suf);
                 }
                 Err(s) => println!("{}", s),
             }
