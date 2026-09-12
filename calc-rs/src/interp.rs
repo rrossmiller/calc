@@ -40,13 +40,12 @@ impl Interp {
                         println!("-> {}: {}", child.kind(), &self.source[child.byte_range()]);
                         println!("ans: {}", r);
                     }
-                    let mut pref = "";
-                    let mut suf = "";
+
                     if is_repl {
-                        pref = " = ";
-                        suf = "\n";
+                        println!(" = {}\n", r);
+                    } else {
+                        println!("{}", r);
                     }
-                    println!("{}{}{}", pref, r, suf);
                 }
                 Err(s) => println!("{}", s),
             }
